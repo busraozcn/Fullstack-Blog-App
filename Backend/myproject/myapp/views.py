@@ -16,7 +16,7 @@ from django.contrib.auth.models import Permission
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = []  # İzinleri kontrol edin
+    permission_classes = []  
 
     @action(detail=False, methods=['post'])
     def bulk_create(self, request):
@@ -30,7 +30,7 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"error": "Expected a list of items."}, status=status.HTTP_400_BAD_REQUEST)
     
     def update(self, request, *args, **kwargs):
-        # PUT isteği için özelleştirilmiş bir update işlemi
+      
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
@@ -145,12 +145,11 @@ class TodoViewSet(viewsets.ModelViewSet):
             return Todo.objects.filter(userId=user_id)
         return Todo.objects.all()
 
-# Permission ve Admin işlemleri için JWT gerekecek
+
 class PermissionViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Permission.objects.all()
     serializer_class = PermissionSerializer
-    permission_classes = []  # Sadece login olmuş admin kullanıcılar erişebilir
-    
+    permission_classes = []  
 
 class AdminUserViewSet(viewsets.ModelViewSet):
     queryset = AdminUser.objects.all()
@@ -181,8 +180,8 @@ class AdminUserViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def add_all_permissions(self, request, pk=None):
         user = self.get_object()
-        permissions = Permission.objects.all()  # Tüm izinleri getir
-        user.user_permissions.set(permissions)  # Kullanıcıya tüm izinleri ekle
+        permissions = Permission.objects.all()  
+        user.user_permissions.set(permissions)  
         return Response({'status': 'all permissions added'})
 
     @action(detail=True, methods=['post'])
@@ -204,11 +203,11 @@ class LoginView(APIView):
             if user.is_active and user.is_staff:
                 refresh = RefreshToken.for_user(user)
                 
-                # Kullanıcı izinlerini al
+              
                 user_permissions = user.user_permissions.all()
                 permissions = [perm.codename for perm in user_permissions]
 
-                # Payload içerisine izinleri ekle
+                
                 access_token = refresh.access_token
                 access_token['permissions'] = permissions
 

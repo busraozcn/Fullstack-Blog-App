@@ -61,7 +61,7 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
-        # Address güncellemesi
+      
         address_data = validated_data.pop('address', None)
         if address_data:
             geo_data = address_data.pop('geo', None)
@@ -74,14 +74,14 @@ class UserSerializer(serializers.ModelSerializer):
                 setattr(instance.address, attr, value)
             instance.address.save()
 
-        # Company güncellemesi
+
         company_data = validated_data.pop('company', None)
         if company_data:
             for attr, value in company_data.items():
                 setattr(instance.company, attr, value)
             instance.company.save()
 
-        # Diğer alanların güncellenmesi
+     
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
@@ -136,7 +136,7 @@ class TodoSerializer(serializers.ModelSerializer):
         model = Todo
         fields = '__all__'
 
-# serializers.py
+
 class AdminUserSerializer(serializers.ModelSerializer):
     permissions = serializers.SerializerMethodField()
 
